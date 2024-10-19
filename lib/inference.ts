@@ -7,15 +7,17 @@
 
 import { CommitCreateEvent } from "@skyware/jetstream";
 import { Job } from "bullmq";
+import { pipeline } from "@xenova/transformers";
+import { zip } from "./util";
+import { createLabel } from "./moderate";
 
-// Uncomment the following and comment out the line after to use another pretrained model
-// import { pipeline } from "@xenova/transformers";
-import { pipeline } from "./pipeline";
+const THRESHOLD = Number(process.env.INFERENCE_THRESHOLD) ?? 0.5;
+const { INFERENCE_PROMPT } = process.env;
 
 // Allocate a pipeline
 const model = pipeline(
-  "multi-label-image-classification", // Probably change to 'image-classification'
-  "howdyaendra/microsoft-swinv2-small-patch4-window16-256-finetuned-xblockm" // e.g. 'Xenova/vit-base-patch16-224'
+  "zero-shot-image-classification",
+  "Xenova/clip-vit-base-patch16"
 );
 
 export default async function (
@@ -31,16 +33,21 @@ export default async function (
           `https://cdn.bsky.app/img/feed_fullsize/plain/${job.data.did}/${d.image.ref.$link}@jpeg`
       );
 
-      const results = await pipeline(urls);
+      const results = await pipeline(urls, [
+        INFERENCE_PROMPT!,
+        `not ${INFERENCE_PROMPT}`,
+      ]);
 
-      // What you do with the results is up to you...
-
-      const filtered = results.filter((p) =>
-        p.some((d) => d.score > 0.75 && d.label !== "negative")
+      const items = zip(urls, results).filter(
+        ([_, results]) =>
+          Math.max(
+            ...results
+              .filter((d) => d.label === INFERENCE_PROMPT)
+              .map((d) => d.score)
+          ) > THRESHOLD
       );
-      if (filtered.length > 0) {
-        console.log(urls, filtered);
-      }
+
+      await createLabel(job.data, items);
     }
   } catch (e) {
     console.error(e);

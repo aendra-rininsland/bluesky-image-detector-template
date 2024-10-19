@@ -1,6 +1,6 @@
 FROM node:lts
 
-WORKDIR /xblock
+WORKDIR /app
 
 COPY package-lock.json .
 
@@ -8,5 +8,5 @@ COPY package.json .
 
 RUN npm ci
 
-COPY lib /xblock/lib
+COPY lib /app/lib
 

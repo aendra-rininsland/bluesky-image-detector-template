@@ -1,17 +1,27 @@
 {
-  "name": "consumer",
+  "name": "@aendra/bluesky-image-labeler-template",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "firehose": "tsx lib/firehose.ts",
-    "worker": "tsx lib/worker.ts"
+    "worker": "tsx lib/worker.ts",
+    "labeler": "tsx lib/labeler.ts",
+    "feed": "tsx lib/feed.ts",
+    "build:image": "source .env && docker build -t $IMAGE_NAME .",
+    "start": "source .env && docker-compose up"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@atproto/identity": "^0.4.2",
+    "@atproto/xrpc-server": "^0.7.1",
+    "@fastify/express": "^4.0.1",
+    "@skyware/bot": "^0.3.4",
     "@skyware/jetstream": "^0.1.9",
+    "@skyware/labeler": "^0.1.8",
     "@types/node": "^22.7.6",
     "@xenova/transformers": "^2.17.2",
     "better-queue": "^3.8.12",

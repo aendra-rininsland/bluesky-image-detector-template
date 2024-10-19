@@ -36,3 +36,6 @@ jetstream.onCreate("app.bsky.feed.post", (event) => {
 jetstream.start();
 
 console.log("Firehose consumer running...");
+console.info(
+  `Prompt: ${process.env.INFERENCE_PROMPT} | Threshold: ${process.env.INFERENCE_THRESHOLD}`
+);

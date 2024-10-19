@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 services:
   redis:
-    container_name: redis
+    container_name: $SERVICE_ID-redis
     image: redis:7.4-bookworm
     restart: unless-stopped
     ports:
@@ -15,19 +15,40 @@ services:
       - redis:/var/redis
 
   firehose:
-    container_name: firehose
-    image: aendra/xblock:latest
+    container_name: $SERVICE_ID-firehose
+    image: $IMAGE_NAME
     depends_on:
       - redis
     command: npm run firehose
+    environment:
+      - INFERENCE_THRESHOLD
+      - INFERENCE_PROMPT
 
   worker:
-    container_name: worker
-    image: aendra/xblock:latest
+    container_name: $SERVICE_ID-worker
+    image: $IMAGE_NAME
     depends_on:
       - redis
       - firehose
+      - labeler
     command: npm run worker
+    environment:
+      - INFERENCE_THRESHOLD
+      - INFERENCE_PROMPT
+      - BSKY_USERNAME
+      - BSKY_PASSWORD
+
+  labeler:
+    container_name: $SERVICE_ID-labeler
+    image: $IMAGE_NAME
+    depends_on:
+      - redis
+    command: npm run labeler
+    environment:
+      - LABELER_DID
+      - SIGNING_KEY
+    ports:
+      - 14831:14831
 
 volumes:
   redis:

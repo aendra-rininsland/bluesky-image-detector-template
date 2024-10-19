@@ -1,0 +1,6 @@
+SERVICE_ID="labeler-template"
+IMAGE_NAME="aendra/image-labeler:latest"
+INFERENCE_THRESHOLD=0.65
+INFERENCE_PROMPT="anime girl"
+BSKY_USERNAME="test.bsky.social"
+BSKY_PASSWORD="DON'T VERSION CONTROL THIS FILE"
