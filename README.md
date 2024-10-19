@@ -1,1 +1,1 @@
-Work in progress: easy-to-deploy label + custom feed
+Work in progress: easy-to-deploy ML-driven labeller + custom feed
