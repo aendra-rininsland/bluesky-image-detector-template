@@ -1,6 +1,8 @@
-SERVICE_ID="labeler-template"
-IMAGE_NAME="aendra/image-labeler:latest"
+## NOTICE: You probably want to rename this file to .env
+
+SERVICE_ID="bluesky-image-detector-template"
+IMAGE_NAME="aendra/bluesky-image-detector:latest"
 INFERENCE_THRESHOLD=0.65
 INFERENCE_PROMPT="anime girl"
 BSKY_USERNAME="test.bsky.social"
-BSKY_PASSWORD="DON'T VERSION CONTROL THIS FILE"
+BSKY_PASSWORD="DON'T VERSION CONTROL THIS FILE, RENAME TO .env"
